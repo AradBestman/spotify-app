@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const Upload = () => {
   const [audioFile, setAudioFile] = useState(null);
@@ -27,6 +28,19 @@ const Upload = () => {
         "http://localhost:5001/api/v1/songs",
         formData
       );
+      toast("Your song upload successfully 👌", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        style: {
+          background: "green",
+        },
+      });
       console.log("data from response", data);
     } catch (err) {
       console.log(err);
@@ -36,7 +50,12 @@ const Upload = () => {
 
   return (
     <form className="formUpload" encType="multipart/form-data">
-      <input type="file" name="audioFile" onChange={handleFileChange} />
+      <input
+        style={{ color: "white" }}
+        type="file"
+        name="audioFile"
+        onChange={handleFileChange}
+      />
       {/* Add additional input fields for other properties */}
       <input
         type="text"

@@ -8,6 +8,7 @@ import authSlice, { authActions } from "../store/authSlice";
 import { validateLogin } from "../validation/loginvalidtion";
 import { Alert } from "@mui/material";
 import { toast } from "react-toastify";
+import { jwtDecode } from "jwt-decode";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -36,7 +37,6 @@ const Login = () => {
         formData
       );
       storeToken(res.data.Jwt, true);
-      dispatch(authActions.login());
       toast("You logged in successfully 👌", {
         position: "top-right",
         autoClose: 5000,
@@ -47,6 +47,9 @@ const Login = () => {
         progress: undefined,
         theme: "light",
       });
+
+      dispatch(authActions.login(jwtDecode(res.data.Jwt)));
+
       navigate(ROUTES.CATEGORIES);
       console.log(res);
     } catch (error) {

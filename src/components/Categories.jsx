@@ -1,33 +1,26 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import image from "../images/peace.jpg";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import Container from "@mui/material/Container";
 import Playlists from "./Playlists";
 import nextKey from "generate-my-key";
+import axios from "axios";
 
 const Categories = () => {
-  const dataCategories = [
-    {
-      id: 1,
-      name: "Focus",
-      tagline: "MUsic to help you concentrate",
-    },
-    {
-      id: 2,
-      name: "Mood",
-      tagline: "Playlist to match your mood",
-    },
-    {
-      id: 3,
-      name: "SoundTrack your home",
-      tagline: "",
-    },
-    {
-      id: 4,
-      name: "Aradddd",
-      tagline: "Kick bass this sunday",
-    },
-  ];
+  const [dataCategories, setDataCategories] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:5001/api/v1/category")
+      .then((response) => {
+        console.log(response);
+        setDataCategories(response.data); // Corrected to access response.data
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+  }, []);
+
   return (
     <div className="mainInner">
       {dataCategories.map((category) => (
@@ -36,11 +29,12 @@ const Categories = () => {
             <h2>{category.name}</h2>
             <span className="seeAll">SEE ALL</span>
             <p className="subText">{category.tagline}</p>
-            <Playlists category_id={category.id} />
+            <Playlists category_id={category._id} />
           </div>
         </div>
       ))}
     </div>
   );
 };
+
 export default Categories;

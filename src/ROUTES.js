@@ -6,5 +6,8 @@ const ROUTES = {
   UPLOAD: "/upload",
   PLAYLIST: "/playlist",
   LIBRARY: "/library",
+  PROFILE: "/profile",
+  EDITPROFILE: "/editprofile",
+  ALLUSERS: "/allusers",
 };
 export default ROUTES;

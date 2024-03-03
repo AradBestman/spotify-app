@@ -1,10 +1,20 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { ReactComponent as HomeIcon } from "../images/home.svg";
 import { ReactComponent as SearchIcon } from "../images/search.svg";
 import { ReactComponent as LibraryIcon } from "../images/your libraryIcon.svg";
+import PeopleIcon from "@mui/icons-material/People";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { jwtDecode } from "jwt-decode";
 
 const Nav = () => {
+  const { payload: userData } = useSelector(
+    (bigPie) => bigPie.authSlice.userData
+  );
+  const loggedIn = useSelector((bigPie) => bigPie.authSlice.loggedIn);
+  console.log(userData);
+  console.log(loggedIn);
   return (
     <div className="navBar">
       <div className="logo">
@@ -22,7 +32,7 @@ const Nav = () => {
         </svg>
       </div>
       <ul>
-        <Link to="/home" className="navLink">
+        <Link to="/" className="navLink">
           <li className="navItem active">
             <HomeIcon />
             Home
@@ -40,6 +50,21 @@ const Nav = () => {
             Your Library
           </li>
         </Link>
+        <Link to="/upload" className="navLink">
+          <li className="navItem active">
+            <UploadFileIcon />
+            Upload Your Song
+          </li>
+        </Link>
+
+        {userData && userData.isAdmin && (
+          <Link to="/allusers" className="navLink">
+            <li className="navItem active">
+              <PeopleIcon />
+              All Users
+            </li>
+          </Link>
+        )}
       </ul>
       <div className="cookies">
         <span>Cookies</span>

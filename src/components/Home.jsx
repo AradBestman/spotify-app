@@ -35,7 +35,6 @@ const Home = () => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           // Perform actions when element comes into view
-          console.log("Element is now in view:", entry.target);
           setMyElementIsVisible(entry.isIntersecting);
         }
       });

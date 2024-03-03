@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./Login.css";
-import Register from "./Register";
-import Login from "./Login";
+import Register from "../components/Register";
+import Login from "../components/Login";
 
 const LoginRegisterPage = () => {
   const [isSignupActive, setIsSignupActive] = useState(true);

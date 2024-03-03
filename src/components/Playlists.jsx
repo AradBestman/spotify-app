@@ -8,9 +8,10 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 
 const Playlists = (props) => {
+  console.log("RENDERRRRRRRR");
   const [dataPlaylists, setPlaylists] = useState([]);
   useEffect(() => {
-    axios.get("http://localhost:5001/api/v1/playlist/all").then(({ data }) => {
+    axios.get("http://localhost:5001/api/v1/playlist/").then(({ data }) => {
       console.log(data);
       setPlaylists(data);
     });
@@ -67,12 +68,12 @@ const Playlists = (props) => {
   //   },
   // ];
 
-  // const mactedPlaylists = dataPlaylists.filter(
-  //   (playlist) => playlist.category_id === props.category_id
-  // );
+  const mactedPlaylists = dataPlaylists.filter(
+    (playlist) => playlist.category_id === props.category_id
+  );
   return (
     <div className="cardsWrapInner">
-      {dataPlaylists.map((playlist) => (
+      {mactedPlaylists.map((playlist) => (
         <Link
           style={{ textDecoration: "none", color: "inherit" }}
           to={`/playlist/` + playlist._id}

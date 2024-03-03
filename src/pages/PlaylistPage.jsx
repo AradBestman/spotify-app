@@ -1,51 +1,67 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { useSelector } from "react-redux";
+import React, { Fragment, useState } from "react";
+import { useParams } from "react-router-dom";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
-
-const LikedSongsPage = () => {
-  const [likedSongs, setLikedSongs] = useState([]);
-  const userData = useSelector((bigPie) => bigPie.authSlice.userData);
-  console.log(userData);
+import { useEffect } from "react";
+import axios from "axios";
+import ReactPlayer from "react-player";
+import { useRef } from "react";
+import { authActions, useLikedSongs } from "../store/authSlice";
+import { useDispatch } from "react-redux";
+const PlaylistPage = () => {
+  let { id } = useParams();
+  const dispatch = useDispatch();
+  const { isLiked, likedSongs } = useLikedSongs();
+  const [playlist, setPlaylist] = useState(undefined);
   const [playingSong, setPlayingSong] = useState(null);
   const [playing, setPlaying] = useState(false);
-
   useEffect(() => {
-    const fetchLikedSongs = async () => {
-      try {
-        const { data: allSongs } = await axios.get(
-          "http://localhost:5001/api/v1/songs/library"
+    axios
+      .get(`http://localhost:5001/api/v1/playlist/${id}`)
+      .then(({ data }) => {
+        console.log(data);
+        setPlaylist(data);
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
+  }, []);
+  const handleLikeClick = async (song) => {
+    try {
+      const data = await axios.patch(
+        "http://localhost:5001/api/v1/songs/like",
+        { song_id: song._id }
+      );
+
+      if (isLiked(song._id)) {
+        dispatch(
+          authActions.setLikedSongs(
+            likedSongs.filter((s) => s._id !== song._id)
+          )
         );
-        console.log(allSongs);
-
-        setLikedSongs(allSongs);
-      } catch (error) {
-        console.error("Error fetching liked songs:", error);
+      } else {
+        dispatch(authActions.setLikedSongs([...likedSongs, song]));
       }
-    };
-
-    fetchLikedSongs();
-  }, [userData]);
-
+    } catch (err) {
+      console.log("like err", err);
+    }
+  };
+  if (playlist == undefined) {
+    return <Fragment></Fragment>;
+  }
   return (
     <div className="playlistPage">
       <div className="mainInner">
         <div className="playlistPageInfo">
           <div className="playlistPageImage">
-            <img
-              src="https://images.unsplash.com/photo-1587201572498-2bc131fbf113?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=924&q=80"
-              alt="pic"
-            />
+            <img src={playlist.img} alt="pic" />
           </div>
           <div className="playlistPageContent">
             <p className="smallText uppercase bold">Playlist</p>
-            <h1>A Perfect Day</h1>
+            <h1>{playlist.name}</h1>
 
-            <p className="tagline">
-              Minimalism, electronica and modern classical to concentrate to.
-            </p>
+            <p className="tagline">{playlist.desc}</p>
             <div className="playlistPageDesc">
               <p className="spotify">Spotify</p>
               <span>699,428 likes</span>
@@ -67,7 +83,7 @@ const LikedSongsPage = () => {
           </div>
 
           <ul className="songList">
-            {likedSongs.map((likedSong, index) => (
+            {playlist.songs.map((song, index) => (
               <li key={index}>
                 <div className="songIcon">
                   <MusicNoteIcon className="noteI" />
@@ -75,12 +91,12 @@ const LikedSongsPage = () => {
                     className="playI"
                     onClick={() => {
                       ``;
-                      if (likedSong.path) {
+                      if (song.path) {
                         const url = `http://localhost:5001/${
-                          likedSong.path.split("public/")[1]
+                          song.path.split("public/")[1]
                         }`;
-                        likedSong.path.split();
-                        console.log(likedSong.path.split("public/")[1]);
+                        song.path.split();
+                        console.log(song.path.split("public/")[1]);
                         if (playingSong === url) {
                           setPlayingSong(undefined);
                         } else {
@@ -90,17 +106,18 @@ const LikedSongsPage = () => {
                     }}
                   />
                   <FavoriteIcon
+                    style={{ fill: isLiked(song._id) ? "red" : "white" }}
                     onClick={() => {
-                      handleLikeClick(likedSong._id);
+                      handleLikeClick(song);
                     }}
                   />
                 </div>
                 <div className="songDetails">
-                  <h3>{likedSong.originalname}</h3>
-                  <span>{likedSong.artist}</span>
+                  <h3>{song.originalname}</h3>
+                  <span>{song.artist}</span>
                 </div>
                 <div className="songTime">
-                  <span>{likedSong.size}</span>
+                  <span>{song.size}</span>
                 </div>
               </li>
             ))}
@@ -120,4 +137,4 @@ const LikedSongsPage = () => {
   );
 };
 
-export default LikedSongsPage;
+export default PlaylistPage;

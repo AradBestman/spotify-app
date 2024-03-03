@@ -1,6 +1,11 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+  useLocation,
+  useFormAction,
+} from "react-router-dom";
 import { authActions } from "../store/authSlice";
 import { getToken } from "../storageToken/storageToken";
 import { toast } from "react-toastify";
@@ -16,6 +21,9 @@ const Main = () => {
   const location = useLocation();
   const [searchTxt, setSearchTxt] = useState("");
   const TOKEN = "token";
+  const handleNavigate = () => {
+    navigate("/login");
+  };
 
   const handleLogout = () => {
     const token = getToken();
@@ -25,7 +33,6 @@ const Main = () => {
       sessionStorage.removeItem(TOKEN);
     }
 
-    dispatch(authActions.logout());
     console.log(loggedIn);
     toast("You logged out successfully ", {
       position: "top-right",
@@ -37,6 +44,7 @@ const Main = () => {
       progress: undefined,
       theme: "light",
     });
+    dispatch(authActions.logout());
     navigate("/login");
   };
 
@@ -51,8 +59,10 @@ const Main = () => {
   const handleTxtChange = (e) => {
     const searchText = e.target.value;
     setSearchTxt(searchText);
-    navigate(`${ROUTES.HOME}?filter=${searchText}`);
+    navigate(`${ROUTES.SEARCH}?filter=${searchText}`);
   };
+
+  const { pathname } = useLocation();
 
   return (
     <div className="mainUpper">
@@ -65,26 +75,40 @@ const Main = () => {
             <KeyboardArrowRightIcon />
           </IconButton>
         </div>
-        <div className="searchInput">
-          {location.pathname === "/search" && (
+
+        {pathname.includes("search") && (
+          <div className="searchInput">
             <input
               type="text"
               placeholder="Search"
               className=""
-              onChange={handleTxtChange}
               value={searchTxt}
+              onChange={handleTxtChange}
             />
-          )}
-        </div>
-        <div className="SigninUp">
-          <IconButton
-            className="SigninUp"
-            style={{ color: "white" }}
-            onClick={handleLogout}
-          >
-            {loggedIn ? "Logout" : "Signin & Signup"}
-          </IconButton>
-        </div>
+          </div>
+        )}
+
+        {loggedIn ? (
+          <div className="SigninUp">
+            <IconButton
+              className="SigninUp"
+              style={{ color: "white" }}
+              onClick={handleLogout}
+            >
+              Log Out
+            </IconButton>
+          </div>
+        ) : (
+          <div className="SigninUp">
+            <IconButton
+              className="SigninUp"
+              style={{ color: "white" }}
+              onClick={handleNavigate}
+            >
+              Sign in
+            </IconButton>
+          </div>
+        )}
       </div>
       <div className="mainContent"></div>
     </div>
