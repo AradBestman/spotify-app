@@ -79,6 +79,7 @@ const Main = () => {
         {pathname.includes("search") && (
           <div className="searchInput">
             <input
+              style={{ borderRadius: "500px", backgroundColor: "#242424" }}
               type="text"
               placeholder="Search"
               className=""

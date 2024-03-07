@@ -68,7 +68,7 @@ const Nav = () => {
       </ul>
       <div className="cookies">
         <span>Cookies</span>
-        <span>Privacy Policy</span>
+        <span>Privacy Policy Arad Ariel</span>
       </div>
     </div>
   );

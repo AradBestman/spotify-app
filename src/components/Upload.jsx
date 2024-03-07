@@ -49,54 +49,35 @@ const Upload = () => {
   };
 
   return (
-    <form className="formUpload" encType="multipart/form-data">
-      <input
-        style={{ color: "white" }}
-        type="file"
-        name="audioFile"
-        onChange={handleFileChange}
-      />
-      {/* Add additional input fields for other properties */}
-      <input
-        type="text"
-        name="name"
-        placeholder="Song Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-      <input
-        type="text"
-        name="artist"
-        placeholder="Artist"
-        value={artist}
-        onChange={(e) => setArtist(e.target.value)}
-      />
-      <input
-        type="text"
-        name="song"
-        placeholder="Song Title"
-        value={song}
-        onChange={(e) => setSong(e.target.value)}
-      />
-      <input
-        type="text"
-        name="img"
-        placeholder="Image Path"
-        value={img}
-        onChange={(e) => setImg(e.target.value)}
-      />
-      <input
-        type="text"
-        name="duration"
-        placeholder="Duration"
-        value={duration}
-        onChange={(e) => setDuration(e.target.value)}
-      />
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        minHeight: "100vh",
+        alignItems: "center",
+      }}
+    >
+      <form
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+        className="formUpload"
+        encType="multipart/form-data"
+      >
+        <input
+          style={{ color: "white" }}
+          type="file"
+          name="audioFile"
+          onChange={handleFileChange}
+        />
 
-      <button type="button" onClick={handleUpdateChangesClick}>
-        Upload
-      </button>
-    </form>
+        <button type="button" onClick={handleUpdateChangesClick}>
+          Upload
+        </button>
+      </form>
+    </div>
   );
 };
 

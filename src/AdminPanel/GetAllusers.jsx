@@ -23,6 +23,7 @@ const GetAllUsers = () => {
   }, []);
 
   const handleDelete = (deletedUserId) => {
+    console.log(deletedUserId);
     setDataFromServer(
       dataFromServer.filter((user) => user._id !== deletedUserId)
     );

@@ -10,26 +10,35 @@ const AdminDelete = ({
   const [deleteSuccess, setDeleteSuccess] = useState(undefined);
   const deleteUrl = `http://localhost:5001/api/v1/users/${userId}`;
 
-  const onDelete = (e) => {
-    e.preventDefault();
+  const onDelete = () => {
     const token = getToken();
     axios
-      .delete(deleteUrl, {
-        headers: {
-          "x-auth-token": token,
-        },
-      })
+      .delete(deleteUrl)
       .then(() => {
         // Successful deletion
+        console.log("LoggYaaa");
         onDeleteCallback(userId);
         setDeleteSuccess(true);
         console.log("Success Delete");
       })
+
       .catch((err) => {
         console.log("err", err);
       });
+    console.log(userId);
   };
+  // const onDelete = async () => {
+  //   try {
+  //     const token = getToken();
 
+  //     await axios.delete(deleteUrl);
+
+  //     onDeleteCallback(userId);
+  //     setDeleteSuccess(true);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
   return (
     <Box>
       {deleteSuccess === undefined ? null : deleteSuccess ? (
